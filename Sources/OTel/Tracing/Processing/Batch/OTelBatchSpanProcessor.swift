@@ -92,7 +92,8 @@ public actor OTelBatchSpanProcessor<Exporter: OTelSpanExporter, Clock: _Concurre
                     throw CancellationError()
                 }
 
-                try? await group.next()
+                nonisolated(unsafe) var unsafeGroup = group
+                try? await unsafeGroup.next()
                 group.cancelAll()
             }
         }
@@ -111,7 +112,8 @@ public actor OTelBatchSpanProcessor<Exporter: OTelSpanExporter, Clock: _Concurre
                 throw CancellationError()
             }
 
-            try? await group.next()
+            nonisolated(unsafe) var unsafeGroup = group
+            try? await unsafeGroup.next()
             group.cancelAll()
         }
     }

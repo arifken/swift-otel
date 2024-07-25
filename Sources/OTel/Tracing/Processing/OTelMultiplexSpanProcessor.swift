@@ -68,7 +68,8 @@ public actor OTelMultiplexSpanProcessor: OTelSpanProcessor {
                 group.addTask { try await processor.forceFlush() }
             }
 
-            try await group.waitForAll()
+            nonisolated(unsafe) var unsafeGroup = group
+            try await unsafeGroup.waitForAll()
         }
     }
 }
